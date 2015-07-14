@@ -39,7 +39,7 @@ public class LessMojo extends AbstractMojo {
             }
             catch (Exception ex) {
                 getLog().error(ex);
-                throw new MojoFailureException("Error to compile: " + compile);
+                throw new MojoFailureException("Error to compile: " + compile.from);
             }
 
             if (compile.append != null && compile.to != null) {
