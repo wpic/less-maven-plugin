@@ -3,7 +3,7 @@
 
     <groupId>com.github.wpic</groupId>
     <artifactId>less-maven-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>maven-plugin</packaging>
 
     <name>less-maven-plugin</name>
