@@ -7,6 +7,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.codehaus.plexus.util.DirectoryScanner;
 
 import java.io.File;
 import java.util.List;
@@ -17,6 +18,9 @@ import java.util.List;
 @Mojo( name = "less")
 public class LessMojo extends AbstractMojo {
 
+    @Parameter( defaultValue = "${project.basedir}" )
+    private File baseDir;
+
     @Parameter( property = "compiles", required = true )
     private List<Compile> compiles;
 
@@ -26,20 +30,15 @@ public class LessMojo extends AbstractMojo {
                 throw new MojoFailureException("Source file (from) is not set");
             }
 
-            if (!compile.from.exists()) {
-                throw new MojoFailureException("Source file (from) does not find: " + compile.from);
-            }
-            if (!compile.from.isFile()) {
-                throw new MojoFailureException("Source file (from) is not directory: " + compile.from);
-            }
+            final DirectoryScanner scanner = new DirectoryScanner();
+            scanner.setIncludes(new String[]{compile.from});
+            scanner.setBasedir(baseDir);
+            scanner.setCaseSensitive(false);
+            scanner.scan();
 
-            final String css;
-            try {
-                css = Less.compile(compile.from, Boolean.TRUE.equals(compile.compress));
-            }
-            catch (Exception ex) {
-                getLog().error(ex);
-                throw new MojoFailureException("Error to compile: " + compile.from);
+            final String[] files = scanner.getIncludedFiles();
+            if (files.length == 0) {
+                throw new MojoFailureException("No source file found: " + compile.from);
             }
 
             if (compile.append != null && compile.to != null) {
@@ -47,43 +46,74 @@ public class LessMojo extends AbstractMojo {
                         "Just one of append (" + compile.append + ") and to (" + compile.to + ") can set!");
             }
 
-            final File dest;
-            final boolean append;
-            if (compile.to != null) {
-                dest = compile.to;
-                append = false;
+            // Without to and without append
+            else if (compile.to == null && compile.append == null) {
+                for (String f : files) {
+                    try {
+                        final File from = new File(f);
+                        final String css = Less.compile(from, Boolean.TRUE.equals(compile.compress));
+                        final String name = from.getName();
+
+                        final File dest;
+                        if (name.toLowerCase().endsWith(".less")) {
+                            dest = new File(from.getPath().substring(0, from.getPath().length() - 5) + ".css");
+                        } else {
+                            dest = new File(from.getPath() + ".css");
+                        }
+                        FileUtils.writeStringToFile(dest, css, false);
+                    } catch (Exception ex) {
+                        getLog().error(ex);
+                        throw new MojoFailureException("Error to compile: " + compile.from);
+                    }
+                }
             }
+
+            // With to and without append
+            else if (compile.to != null) {
+                final StringBuilder css = new StringBuilder();
+
+                for (String f : files) {
+                    try {
+                        final File from = new File(f);
+
+                        css.append(Less.compile(from, Boolean.TRUE.equals(compile.compress)));
+                        css.append('\n');
+                    } catch (Exception ex) {
+                        getLog().error(ex);
+                        throw new MojoFailureException("Error to compile: " + compile.from);
+                    }
+                }
+
+                try {
+                    FileUtils.writeStringToFile(compile.to, css.toString(), false);
+                } catch (Exception ex) {
+                    getLog().error(ex);
+                    throw new MojoFailureException("Error to save: " + compile.from);
+                }
+            }
+
+            // Without to and with append
             else if (compile.append != null) {
-                dest = compile.append;
-                append = true;
-            }
-            else {
-                final String name = compile.from.getName();
-                if (name.toLowerCase().endsWith(".less")) {
-                    dest = new File(compile.from.getPath().substring(0, compile.from.getPath().length() - 5) + ".css");
-                    append = false;
-                }
-                else {
-                    dest = new File(compile.from.getPath() + ".css");
-                    append = false;
-                }
-            }
+                final StringBuilder css = new StringBuilder();
 
-            try {
-                if (dest.isDirectory()) {
-                    throw new MojoFailureException("Destination file (to) is exist and it's a directory: " + compile.from);
+                for (String f : files) {
+                    try {
+                        final File from = new File(f);
+
+                        css.append(Less.compile(from, Boolean.TRUE.equals(compile.compress)));
+                        css.append('\n');
+                    } catch (Exception ex) {
+                        getLog().error(ex);
+                        throw new MojoFailureException("Error to compile: " + compile.append);
+                    }
                 }
 
-                final File dir = dest.getParentFile();
-                if (!dir.exists() && !dir.mkdirs()) {
-                    throw new MojoFailureException("Can not create output directory: " + dir);
+                try {
+                    FileUtils.writeStringToFile(compile.append, css.toString(), true);
+                } catch (Exception ex) {
+                    getLog().error(ex);
+                    throw new MojoFailureException("Error to save: " + compile.append);
                 }
-
-                FileUtils.writeStringToFile(dest, css, append);
-            }
-            catch (Exception ex) {
-                getLog().error(ex);
-                throw new MojoFailureException("Error to write css: " + dest);
             }
 
         }

@@ -4,7 +4,7 @@ import java.io.File;
 
 public class Compile {
 
-    public File from;
+    public String from;
 
     public File to;
 
