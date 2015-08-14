@@ -3,40 +3,41 @@ Fast maven plugin for less compiler (use jless). It can also convert multiple fi
 # Sample usage
 
 ```xml
-<build>
-  ...
-  <plugins>
-     ...
-     <plugin>
-        <groupId>com.github.wpic</groupId>
-        <artifactId>less-maven-plugin</artifactId>
-        <version>1.0</version>
-        <configuration>
-           <compiles>
-              <compile>
-                 <from>${basedir}/less/bootstrap-all.less</from>
-                 <to>${project.build.directory}/${project.build.finalName}/css/all.css</to>
-                 <compress>true</compress>
-              </compile>
-              <compile>
-                 <from>${basedir}/bower_components/bootstrap-less/less/theme.less</from>
-                 <to>${project.build.directory}/${project.build.finalName}/css/all.css</to>
-                 <compress>false</compress>
-              </compile>
-           </compiles>
-        </configuration>
-        <executions>
-           <execution>
-              <phase>compile</phase>
-              <goals>
-                 <goal>less</goal>
-              </goals>
-           </execution>
-        </executions>
-     </plugin>
-     ...
-  </plugins>
-</build>
+<plugin>
+    <groupId>com.github.wpic</groupId>
+    <artifactId>less-maven-plugin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <configuration>
+        <compiles>
+            <!-- First compile -->
+            <compile>
+                <from>bower_components/bootstrap-less/less/bootstrap.less</from>
+                <to>${project.build.directory}/${project.build.finalName}/bower_components/bootstrap-less/less/bootstrap.css</to>
+                <compress>true</compress>
+            </compile>
+            <!-- Append another one to it -->
+            <compile>
+                <from>bower_components/bootstrap-less/less/theme.less</from>
+                <append>${project.build.directory}/${project.build.finalName}/bower_components/bootstrap-less/less/bootstrap.css</append>
+                <compress>true</compress>
+            </compile>
+            <!-- Add all the less files using wildcard -->
+            <compile>
+                <from>mithril_components/**/*.less</from>
+                <append>${project.build.directory}/${project.build.finalName}/bower_components/bootstrap-less/less/bootstrap.css</append>
+                <compress>true</compress>
+            </compile>
+        </compiles>
+    </configuration>
+    <executions>
+        <execution>
+            <phase>compile</phase>
+            <goals>
+                <goal>less</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
 ```
 
 # Parameters
