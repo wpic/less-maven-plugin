@@ -6,7 +6,7 @@ Fast maven plugin for less compiler (use jless). It can also convert multiple fi
 <plugin>
     <groupId>com.github.wpic</groupId>
     <artifactId>less-maven-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.2</version>
     <configuration>
         <compiles>
             <!-- First compile -->
@@ -46,3 +46,8 @@ Fast maven plugin for less compiler (use jless). It can also convert multiple fi
 * to: Destination CSS file.
 * append: Append the CSS to the other file (if 'to' does not set).
 * compress: Compress the output or not.
+
+# History
+
+**v1.2**
+* Update to jlessc version 1.2
