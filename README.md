@@ -1,4 +1,4 @@
-Fast maven plugin for less compiler (use jless). It can also convert multiple files and append them to the other files.
+Fast maven plugin for less compiler (use jless). It can also convert multiple files and merge them to one.
 
 # Sample usage
 
