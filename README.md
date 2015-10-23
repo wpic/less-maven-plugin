@@ -46,3 +46,8 @@ Fast maven plugin for less compiler (use jless). It can also convert multiple fi
 * to: Destination CSS file.
 * append: Append the CSS to the other file (if 'to' does not set).
 * compress: Compress the output or not.
+
+# History
+
+**v1.2**
+* Update to jlessc version 1.2
