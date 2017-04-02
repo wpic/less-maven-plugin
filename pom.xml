@@ -3,7 +3,7 @@
 
     <groupId>com.github.wpic</groupId>
     <artifactId>less-maven-plugin</artifactId>
-    <version>1.2</version>
+    <version>1.5</version>
     <packaging>maven-plugin</packaging>
 
     <name>less-maven-plugin</name>
@@ -128,7 +128,7 @@
         <dependency>
             <groupId>de.inetsoftware</groupId>
             <artifactId>jlessc</artifactId>
-            <version>1.2</version>
+            <version>1.5</version>
         </dependency>
     </dependencies>
 </project>
