@@ -6,7 +6,7 @@ Fast maven plugin for less compiler (use jless). It can also convert multiple fi
 <plugin>
     <groupId>com.github.wpic</groupId>
     <artifactId>less-maven-plugin</artifactId>
-    <version>1.2</version>
+    <version>1.5</version>
     <configuration>
         <compiles>
             <!-- First compile -->
@@ -48,6 +48,9 @@ Fast maven plugin for less compiler (use jless). It can also convert multiple fi
 * compress: Compress the output or not.
 
 # History
+
+**v1.5**
+* Yodate to jlessc version 1.5
 
 **v1.2**
 * Update to jlessc version 1.2
