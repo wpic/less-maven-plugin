@@ -42,7 +42,7 @@ Fast maven plugin for less compiler (use jless). It can also convert multiple fi
 
 # Parameters
 
-* from: Source less file.
+* from: Source less file, relative to project's basedir.
 * to: Destination CSS file.
 * append: Append the CSS to the other file (if 'to' does not set).
 * compress: Compress the output or not.
@@ -50,7 +50,7 @@ Fast maven plugin for less compiler (use jless). It can also convert multiple fi
 # History
 
 **v1.5**
-* Yodate to jlessc version 1.5
+* Update to jlessc version 1.5
 
 **v1.2**
 * Update to jlessc version 1.2
