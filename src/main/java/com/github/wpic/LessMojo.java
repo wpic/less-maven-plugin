@@ -50,7 +50,7 @@ public class LessMojo extends AbstractMojo {
             else if (compile.to == null && compile.append == null) {
                 for (String f : files) {
                     try {
-                        final File from = new File(f);
+                        final File from = new File(baseDir, f);
                         final String css = Less.compile(from, Boolean.TRUE.equals(compile.compress));
                         final String name = from.getName();
 
@@ -74,7 +74,7 @@ public class LessMojo extends AbstractMojo {
 
                 for (String f : files) {
                     try {
-                        final File from = new File(f);
+                        final File from = new File(baseDir, f);
 
                         css.append(Less.compile(from, Boolean.TRUE.equals(compile.compress)));
                         css.append('\n');
@@ -98,7 +98,7 @@ public class LessMojo extends AbstractMojo {
 
                 for (String f : files) {
                     try {
-                        final File from = new File(f);
+                        final File from = new File(baseDir, f);
 
                         css.append(Less.compile(from, Boolean.TRUE.equals(compile.compress)));
                         css.append('\n');
